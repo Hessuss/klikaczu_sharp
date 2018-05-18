@@ -547,11 +547,11 @@ namespace klikaczu_sharp
 
         private void Form1_KeyUp(object sender, KeyEventArgs e)
         {
-            if (e.Control && e.KeyCode == Keys.T)       // Ctrl-S Save
+            if (e.Control && e.KeyCode == Keys.T)       // Ctrl-t
             {
                 System.Threading.Thread.Sleep(500);
                 // Do what you want here
-                label1.Text = "DUPA";
+                label1.Text = "aaaaa";
 
                 position = System.Windows.Forms.Control.MousePosition;
 

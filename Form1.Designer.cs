@@ -144,9 +144,10 @@
             // lblMousePosition
             // 
             this.lblMousePosition.AutoSize = true;
+            this.lblMousePosition.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.lblMousePosition.Location = new System.Drawing.Point(12, 17);
             this.lblMousePosition.Name = "lblMousePosition";
-            this.lblMousePosition.Size = new System.Drawing.Size(59, 13);
+            this.lblMousePosition.Size = new System.Drawing.Size(69, 13);
             this.lblMousePosition.TabIndex = 0;
             this.lblMousePosition.Text = "lblmosepoz";
             // 
