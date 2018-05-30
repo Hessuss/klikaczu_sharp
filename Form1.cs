@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
-
 using System.Runtime.InteropServices;
 
 namespace klikaczu_sharp
@@ -53,10 +53,12 @@ namespace klikaczu_sharp
 
         int rundka = 1; // do pętlenia rundek
         int kurx = 0;
+        int xdest = 0;
+        int ydest = 0;
         long color = 0;
         long colorzer = 0;
         long colorczek = 0;
-        
+        System.Diagnostics.Process prc = new System.Diagnostics.Process();// do odpalania przeglądarki
         IntPtr dc = GetWindowDC(IntPtr.Zero);
         Random rnd = new Random();
         Point position = System.Windows.Forms.Control.MousePosition;
@@ -66,9 +68,10 @@ namespace klikaczu_sharp
 
         public static void LeftClick(int x, int y)
         {
+            System.Threading.Thread.Sleep(new Random().Next(1, 100));
             Cursor.Position = new System.Drawing.Point(x, y);
             mouse_event((int)(MouseEventFlags.LEFTDOWN), 0, 0, 0, 0);
-            System.Threading.Thread.Sleep(36);
+            System.Threading.Thread.Sleep(new Random().Next(36, 58));
             mouse_event((int)(MouseEventFlags.LEFTUP), 0, 0, 0, 0);
         }
 
@@ -91,20 +94,18 @@ namespace klikaczu_sharp
         private void timer1_Tick(object sender, EventArgs e)
         {
             position = System.Windows.Forms.Control.MousePosition;
-            color = GetPixel(dc, position.X-1, position.Y-1);
-            label3.Text = "X: " + position.X + "  " + "Y: " + position.Y + "K:" + color.ToString();   
+            color = GetPixel(dc, position.X, position.Y);
+            label3.Text = "X: " + position.X + "  Y: " + position.Y + " K:" + color.ToString();   
         }
 
         private void timer2_Tick(object sender, EventArgs e)
         {
             if (konfigurowanie == false)
             {
-                timer2.Enabled = false;
                 lblMousePosition.Text = licznik.ToString();
                 n.label1.Text = licznik.ToString();
                 licznik++;
                 praca();
-                timer2.Enabled = true;
             }
             else // konfigurowanie włączone
             {
@@ -164,11 +165,15 @@ namespace klikaczu_sharp
 
             ini.Write("klikaczu", "boksx", boksx.Text);
             ini.Write("klikaczu", "boksy", boksy.Text);
-            ini.Write("klikaczu", "boksk", boksk.Text);           
+            ini.Write("klikaczu", "boksk", boksk.Text);
 
             ini.Write("klikaczu", "ptakx", ptakx.Text);
             ini.Write("klikaczu", "ptaky", ptaky.Text);
             ini.Write("klikaczu", "ptakk", ptakk.Text);
+
+            ini.Write("klikaczu", "ramx", niebx.Text);
+            ini.Write("klikaczu", "ramy", nieby.Text);
+            ini.Write("klikaczu", "ramk", niebk.Text);
 
             ini.Write("klikaczu", "poblgx", poblgx.Text);
             ini.Write("klikaczu", "poblgy", poblgy.Text);
@@ -237,6 +242,8 @@ namespace klikaczu_sharp
             ini.Write("klikaczu", "eklgy", eklgy.Text);
             ini.Write("klikaczu", "ekpdx", ekpdx.Text);
             ini.Write("klikaczu", "ekpdy", ekpdy.Text);
+
+            ini.Write("klikaczu", "przegladarka", przegladarka.Text);
         }
 
         private void siorb_dane()
@@ -269,6 +276,10 @@ namespace klikaczu_sharp
             ptakx.Text = ini.Read("klikaczu", "ptakx");
             ptaky.Text = ini.Read("klikaczu", "ptaky");
             ptakk.Text = ini.Read("klikaczu", "ptakk");
+
+            niebx.Text = ini.Read("klikaczu", "ramx");
+            nieby.Text = ini.Read("klikaczu", "ramy");
+            niebk.Text = ini.Read("klikaczu", "ramk");
 
             poblgx.Text = ini.Read("klikaczu", "poblgx");
             poblgy.Text = ini.Read("klikaczu", "poblgy");
@@ -337,6 +348,8 @@ namespace klikaczu_sharp
             eklgy.Text = ini.Read("klikaczu", "eklgy");
             ekpdx.Text = ini.Read("klikaczu", "ekpdx");
             ekpdy.Text = ini.Read("klikaczu", "ekpdy");
+
+            przegladarka.Text = ini.Read("klikaczu", "przegladarka");
         }
 
 
@@ -726,24 +739,49 @@ namespace klikaczu_sharp
             siorb_dane();
         }
 
-        private void praca()
+        private async void praca()
         {
                 switch (licznik)
                 {
-                /*    // łejtuje 5 tików zanim odpale maszyne
-
-                    case 10: // refresz przegladary
+                    // łejtuje 5 tików zanim odpale maszyne
+                    case 5:
                         //losowy łejt
                         System.Threading.Thread.Sleep(rnd.Next(1, 500));
+                        label1.Text = "odpalam przeglądarkie";
+                        try
+                        {
+                            prc.StartInfo.FileName = @przegladarka.Text;
+                            prc.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Maximized;
+                            prc.Start();
+                        }
+                        catch (Exception e)
+                        {
+                            MessageBox.Show(e.Message);                     
+                        }
+                    break;
+                    
+                    case 10: // refresz przegladary
+                        label1.Text = "jadymy na refresz";
+                        //losowy łejt
+                        System.Threading.Thread.Sleep(rnd.Next(1, 500));
+                        // pozycja
+                        xdest = rnd.Next(int.Parse(refbtnlgx.Text), int.Parse(refbtnpdx.Text));
+                        ydest = rnd.Next(int.Parse(refbtnlgy.Text), int.Parse(refbtnpdy.Text));
+                        //jadymy
+                        await HumanWindMouse(xdest, ydest);
                         //klikanie
-                        LeftClick(int.Parse(refbtnlgx.Text), int.Parse(refbtnlgy.Text));
-                        label1.Text = "klikłem refresz";
+                        if (rundka > 1) { 
+                            LeftClick(xdest, ydest);
+                        }
                         break;
                     case 20:// suwamy myszę z miejsca sprawdzania kolorku
                         label1.Text = "suwam mysze ";
                         //losowy łejt
                         System.Threading.Thread.Sleep(rnd.Next(1, 500));
-                        Spadaj(rnd.Next(50, 200), rnd.Next(50, 200));
+                        xdest = rnd.Next(int.Parse(eklgx.Text), int.Parse(ekpdx.Text));
+                        ydest = rnd.Next(0, 100);
+                        //jadymy
+                        await HumanWindMouse(xdest, ydest);
                         break;
                     case 30://sprawdzamy czy się refreszło
                         label1.Text = "sprawdzam czy się refreszło ";
@@ -761,15 +799,25 @@ namespace klikaczu_sharp
                     case 40: //zamykamy czacik
                         //losowy łejt
                         System.Threading.Thread.Sleep(rnd.Next(1, 500));
+                        // pozycja
+                        xdest = rnd.Next(int.Parse(czatlgx.Text), int.Parse(czatpdx.Text));
+                        ydest = rnd.Next(int.Parse(czatlgy.Text), int.Parse(czatpdy.Text));
+                        //jadymy
+                        await HumanWindMouse(xdest, ydest);
                         //klikanie
-                        LeftClick(int.Parse(czatlgx.Text), int.Parse(czatlgy.Text));
+                        LeftClick(xdest, ydest);
                         label1.Text = "klikłem klołsczat";
                         break;
                     case 42: // klikanie ikony get fałcet
                         //losowy łejt
                         System.Threading.Thread.Sleep(rnd.Next(1, 500));
+                        // pozycja
+                        xdest = rnd.Next(int.Parse(friklgx.Text), int.Parse(frikpdx.Text));
+                        ydest = rnd.Next(int.Parse(friklgy.Text), int.Parse(frikpdy.Text));
+                        //jadymy
+                        await HumanWindMouse(xdest, ydest);
                         //klikanie
-                        LeftClick(int.Parse(friklgx.Text), int.Parse(friklgy.Text));
+                        LeftClick(xdest, ydest);
                         label1.Text = "klikłem get facio";
                         break;
                     case 48://sprawdzamy czy sięczekło
@@ -788,32 +836,65 @@ namespace klikaczu_sharp
                     case 60: //klikanie boksika że jestem człekiem
                         //losowy łejt
                         System.Threading.Thread.Sleep(rnd.Next(1, 500));
-                        LeftClick(int.Parse(ptakx.Text), int.Parse(ptaky.Text));
+                        // pozycja
+                        xdest = rnd.Next(int.Parse(boksx.Text)-8, int.Parse(boksx.Text)+8);
+                        ydest = rnd.Next(int.Parse(boksy.Text)-8, int.Parse(boksy.Text)+8);
+                        //jadymy
+                        await HumanWindMouse(xdest, ydest);
+                        //klikanie
+                        LeftClick(xdest, ydest);
                         label1.Text = "klikłem boksika";
                         break;
                     case 62:// suwamy myszę z miejsca sprawdzania kolorku
                         label1.Text = "suwam mysze ";
                         //losowy łejt
                         System.Threading.Thread.Sleep(rnd.Next(1, 500));
-                        Spadaj(rnd.Next(50, 200), rnd.Next(50, 200));
+                        xdest = rnd.Next(int.Parse(poblgx.Text), int.Parse(pobpdx.Text));
+                        ydest = rnd.Next(int.Parse(poblgy.Text), int.Parse(pobpdy.Text));
+                        //jadymy
+                        await HumanWindMouse(xdest, ydest);
                         break;
                     case 68://sprawdzamy czy sięczekło
                         label1.Text = "sprawdzam czy się czekło ";
                         colorczek = GetPixel(dc, int.Parse(ptakx.Text), int.Parse(ptaky.Text));
-                        if (colorczek.ToString() != ptakk.Text)
-                        {
-                            licznik = licznik - 5; // zmniejsza licznik żeby timer robił pętlę bo pętla do-while i sleepy freezują progsa
-                            label1.Text = "nie czekło ";
-                        } else
+                        if (colorczek.ToString() == ptakk.Text)
                         {
                             label1.Text = "czekło się ";
+                        } 
+                        else
+                        {
+                            colorczek = GetPixel(dc, int.Parse(niebx.Text), int.Parse(nieby.Text));
+                            if (colorczek.ToString() == niebk.Text)
+                            {
+                                // wyjebało obrazki wiec wypierdalamy softa
+                                label1.Text = "niebieska kapcza ";
+                                // pozycja
+                                xdest = rnd.Next(int.Parse(zamlgx.Text), int.Parse(zampdx.Text));
+                                ydest = rnd.Next(int.Parse(zamlgy.Text), int.Parse(zampdy.Text));
+                                //jadymy
+                                await HumanWindMouse(xdest, ydest);
+                                //klikanie
+                                LeftClick(xdest, ydest);
+                                Application.Exit();
+                            }
+                            else
+                            {
+                                licznik = licznik - 5; // zmniejsza licznik żeby timer robił pętlę bo pętla do-while i sleepy freezują progsa
+                                label1.Text = "nie czekło ";
+                            }
                         }
                         break;
                     case 90: //klikanie przycisku getfałcet na okienku czy jestem człekiem
                         label1.Text = "klikam gecia ";
                         //losowy łejt
                         System.Threading.Thread.Sleep(rnd.Next(1, 500));
-                        LeftClick(int.Parse(poblgx.Text), int.Parse(poblgy.Text));
+                        // pozycja ustawiliśmy się jużwcześniej
+                        //xdest = rnd.Next(int.Parse(poblgx.Text), int.Parse(pobpdx.Text));
+                        //ydest = rnd.Next(int.Parse(poblgy.Text), int.Parse(pobpdy.Text));
+                        //jadymy
+                        await HumanWindMouse(xdest, ydest);
+                        //klikanie
+                        LeftClick(xdest, ydest);
                         break;
                     case 100: //sprawdzanie czy okienko sprawdzające czy jestem człekiem zniknęło
                         // sprawdzam czy ptaszor nadal jest ptaszorem
@@ -834,14 +915,26 @@ namespace klikaczu_sharp
                         label1.Text = "klikam ałtobecia ";
                         //losowy łejt
                         System.Threading.Thread.Sleep(rnd.Next(1, 500));
-                        LeftClick(int.Parse(autolgx.Text), int.Parse(autolgy.Text));
+                        // pozycja
+                        xdest = rnd.Next(int.Parse(autolgx.Text), int.Parse(autopdx.Text));
+                        ydest = rnd.Next(int.Parse(autolgy.Text), int.Parse(autopdy.Text));
+                        //jadymy
+                        await HumanWindMouse(xdest, ydest);
+                        //klikanie
+                        LeftClick(xdest, ydest);
                         break;
                     case 120:
                         // klikamy kwotke
                         label1.Text = "klikam kwotke ";
                         //losowy łejt
                         System.Threading.Thread.Sleep(rnd.Next(1, 500));
-                        LeftClick(int.Parse(kwolgx.Text), int.Parse(kwolgy.Text));
+                        // pozycja
+                        xdest = rnd.Next(int.Parse(kwolgx.Text), int.Parse(kwopdx.Text));
+                        ydest = rnd.Next(int.Parse(kwolgy.Text), int.Parse(kwopdy.Text));
+                        //jadymy
+                        await HumanWindMouse(xdest, ydest);
+                        //klikanie
+                        LeftClick(xdest, ydest);
                         System.Threading.Thread.Sleep(rnd.Next(1, 500));
                         // sendamy zaznacz wszystko
                         SendKeys.Send("^(a)");
@@ -855,77 +948,137 @@ namespace klikaczu_sharp
                         label1.Text = "klikam mnowznik ";
                         //losowy łejt
                         System.Threading.Thread.Sleep(rnd.Next(1, 500));
-                        LeftClick(int.Parse(pejlgx.Text), int.Parse(pejlgy.Text));
+                        // pozycja
+                        xdest = rnd.Next(int.Parse(pejlgx.Text), int.Parse(pejpdx.Text));
+                        ydest = rnd.Next(int.Parse(pejlgy.Text), int.Parse(pejpdy.Text));
+                        //jadymy
+                        await HumanWindMouse(xdest, ydest);
+                        //klikanie
+                        LeftClick(xdest, ydest);
                         //losowy łejt
                         System.Threading.Thread.Sleep(rnd.Next(1, 500));
                         //wpisuje kwoczke
                         SendKeys.Send(pejk.Text);
                         break;
                     case 140:
-                        //losowy łejt
-                        System.Threading.Thread.Sleep(rnd.Next(1, 500));
                         // odpalamy losowanie
                         label1.Text = "odpalamy losowanie ";
-                        LeftClick(int.Parse(odpallgx.Text), int.Parse(odpallgy.Text));
-                        Spadaj(12, 15); // spadamy z miejsca sprawdzania koloru
+                        //losowy łejt
+                        System.Threading.Thread.Sleep(rnd.Next(1, 500));
+                        // pozycja
+                        xdest = rnd.Next(int.Parse(odpallgx.Text), int.Parse(odpalpdx.Text));
+                        ydest = rnd.Next(int.Parse(odpallgy.Text), int.Parse(odpalpdy.Text));
+                        //jadymy
+                        await HumanWindMouse(xdest, ydest);
+                        //klikanie
+                        LeftClick(xdest, ydest);
+                        //losowy łejt
+                        System.Threading.Thread.Sleep(rnd.Next(1, 500));
+                        //await HumanWindMouse(rnd.Next(50, 100), rnd.Next(50, 100));
                         break;
                     case 150:
                         // czekamy aż wypstryka się z kasy
                         label1.Text = "czekam az wypstryka sie z kasy";
-
-                        colorzer = GetPixel(dc, int.Parse(kasx.Text), int.Parse(kasy.Text));
+                        colorzer = GetPixel(dc, int.Parse(kuniecx.Text), int.Parse(kuniecy.Text));
                         //label1.Text = colorzer.ToString();
-                        if (colorzer.ToString() == kask.Text)
+                        if (colorzer.ToString() == kunieck.Text)
                         {
                             //zamykamy modalkiowe okienko
-                            LeftClick(int.Parse(kasx.Text), int.Parse(kasy.Text));
+                            //losowy łejt
                             System.Threading.Thread.Sleep(rnd.Next(1, 500));
-                        } else
+                            // pozycja
+                            xdest = rnd.Next(int.Parse(klolslgx.Text), int.Parse(klolspdx.Text));
+                            ydest = rnd.Next(int.Parse(klolslgy.Text), int.Parse(klolspdy.Text));
+                            //jadymy
+                            await HumanWindMouse(xdest, ydest);
+                            //klikanie
+                            LeftClick(xdest, ydest);
+                            System.Threading.Thread.Sleep(rnd.Next(1, 500));
+                        }
+                        else
                         {
                             licznik = licznik - 5;
+                            if (rnd.Next(1, 50) < 3)
+                            {
+                                label1.Text = "bede machal";
+                                for (int i = 1; i <= rnd.Next(1, 3); i++)
+                                {
+                                    label1.Text = "macham "+i;
+                                    xdest = rnd.Next(int.Parse(eklgx.Text), int.Parse(ekpdx.Text));
+                                    ydest = rnd.Next(int.Parse(eklgy.Text), int.Parse(ekpdy.Text));
+                                    //jadymy
+                                    await HumanWindMouse(xdest, ydest);
+                                }
+                            }
                         }
                         break;
                     case 160:// klikamy maksiora
-                    label1.Text = "klikamy maksiora";
-                    //losowy łejt
-                    System.Threading.Thread.Sleep(rnd.Next(1, 500));
-                        // klikamy maksiora
-                        LeftClick(int.Parse(makslgx.Text), int.Parse(makslgy.Text));
+                        label1.Text = "klikamy maksiora";
+                        //losowy łejt
+                        System.Threading.Thread.Sleep(rnd.Next(1, 500));
+                        // pozycja
+                        xdest = rnd.Next(int.Parse(makslgx.Text), int.Parse(makspdx.Text));
+                        ydest = rnd.Next(int.Parse(makslgy.Text), int.Parse(makspdy.Text));
+                        //jadymy
+                        await HumanWindMouse(xdest, ydest);
+                        //klikanie
+                        LeftClick(xdest, ydest);
                         break;
                     case 170:// klikamy czensa
-                    label1.Text = "klikamy czensa";
-                    //losowy łejt
-                    System.Threading.Thread.Sleep(rnd.Next(1, 500));
-                        // klikamy czensa
-                        LeftClick(int.Parse(czenslgx.Text), int.Parse(czenslgy.Text));
+                        label1.Text = "klikamy czensa";
+                        //losowy łejt
+                        System.Threading.Thread.Sleep(rnd.Next(1, 500));
+                        // pozycja
+                        xdest = rnd.Next(int.Parse(czenslgx.Text), int.Parse(czenspdx.Text));
+                        ydest = rnd.Next(int.Parse(czenslgy.Text), int.Parse(czenspdy.Text));
+                        //jadymy
+                        await HumanWindMouse(xdest, ydest);
+                        //klikanie
+                        LeftClick(xdest, ydest);
                         // i wpisujemy najmniejsza wartosc
                         SendKeys.Send("00.01");
                         break;
                     case 180:// klikamy manbata
-                    label1.Text = "klikamy manbata";
-                    //losowy łejt
-                    System.Threading.Thread.Sleep(rnd.Next(1, 500));
-                        // klikamy czensa
-                        LeftClick(int.Parse(manlgx.Text), int.Parse(manlgy.Text));
-                        break;
+                        label1.Text = "klikamy manbata";
+                        //losowy łejt
+                        System.Threading.Thread.Sleep(rnd.Next(1, 500));
+                        // pozycja
+                        xdest = rnd.Next(int.Parse(manlgx.Text), int.Parse(manpdx.Text));
+                        ydest = rnd.Next(int.Parse(manlgy.Text), int.Parse(manpdy.Text));
+                        //jadymy
+                        await HumanWindMouse(xdest, ydest);
+                        //klikanie
+                        LeftClick(xdest, ydest);
+                    break;
                     case 190:// klikamy rolkę
-                    label1.Text = "klikamy rolkę";
-                    //losowy łejt
-                    System.Threading.Thread.Sleep(rnd.Next(1, 500));
-                        // klikamy czensa
-                        LeftClick(int.Parse(rolgx.Text), int.Parse(rolgy.Text));
-                        break;
+                        label1.Text = "klikamy rolkę";
+                        //losowy łejt
+                        System.Threading.Thread.Sleep(rnd.Next(1, 500));
+                        // pozycja
+                        xdest = rnd.Next(int.Parse(rolgx.Text), int.Parse(ropdx.Text));
+                        ydest = rnd.Next(int.Parse(rolgy.Text), int.Parse(ropdy.Text));
+                        //jadymy
+                        await HumanWindMouse(xdest, ydest);
+                        //klikanie
+                        LeftClick(xdest, ydest);
+                    break;
                     case 200:// abarot
-                    label1.Text = "jedziem od nowa";
-                    licznik = 0;
+                        label1.Text = "jedziem od nowa";
+                        licznik = 6;
                         rundka++;
                         n.label3.Text = "rnd "+rundka.ToString();
                         if (rundka > int.Parse(rundki.Text))
                         {
-                            LeftClick(int.Parse(zamlgx.Text), int.Parse(zamlgy.Text));
+                            // pozycja
+                            xdest = rnd.Next(int.Parse(zamlgx.Text), int.Parse(zampdx.Text));
+                            ydest = rnd.Next(int.Parse(zamlgy.Text), int.Parse(zampdy.Text));
+                            //jadymy
+                            await HumanWindMouse(xdest, ydest);
+                            //klikanie
+                            LeftClick(xdest, ydest);
                             Application.Exit();
                         }
-                        break;*/
+                        break;
                 }
             
         }
@@ -1003,6 +1156,137 @@ namespace klikaczu_sharp
                 Cursor.Position = new Point(Cursor.Position.X + (kurx), Cursor.Position.Y);
                 //Cursor.Clip = new Rectangle(this.Location, this.Size);
             }
+        }
+
+        private void filesetbtn_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                //System.IO.StreamReader sr = new
+                   //System.IO.StreamReader(openFileDialog1.FileName);
+                //MessageBox.Show(openFileDialog1.FileName);
+                przegladarka.Text = openFileDialog1.FileName;
+                //sr.Close();
+            }
+        }
+
+        private static double Distance(double x1, double y1, double x2, double y2)
+        {
+            return Math.Sqrt(Math.Pow(x2 - x1, 2) + Math.Pow(y2 - y1, 2));
+        }
+
+        public static double Hypot(double x, double y)
+        {
+            return Math.Sqrt(Math.Pow(x, 2) + Math.Pow(y, 2));
+        }
+
+        private async Task HumanWindMouse(double xe, double ye)
+        {
+            timer2.Enabled = false;
+            position = System.Windows.Forms.Control.MousePosition;
+            double xs = position.X;
+            double ys = position.Y;
+
+            double gravity = 1;
+            double wind = 1;
+            double minWait = 0.1;
+            double maxWait = 1;
+            double targetArea = 1;
+            int _mouseSpeed = 50;
+
+            double veloX = 0,
+                veloY = 0,
+                windX = 0,
+                windY = 0;
+
+            var msp = _mouseSpeed;
+            var sqrt2 = Math.Sqrt(2);
+            var sqrt3 = Math.Sqrt(3);
+            var sqrt5 = Math.Sqrt(5);
+
+            var tDist = (int)Distance(Math.Round(xs), Math.Round(ys), Math.Round(xe), Math.Round(ye));
+            var t = (uint)(Environment.TickCount + 10000);
+
+            do
+            {
+                if (Environment.TickCount > t)
+                    break;
+
+                var dist = Hypot(xs - xe, ys - ye);
+                wind = Math.Min(wind, dist);
+
+                if (dist < 1)
+                    dist = 1;
+
+                var d = (Math.Round(Math.Round((double)tDist) * 0.3) / 7);
+
+                if (d > 25)
+                    d = 25;
+
+                if (d < 5)
+                    d = 5;
+
+                double rCnc = rnd.Next(6);
+
+                if (rCnc == 1)
+                    d = 2;
+
+                double maxStep;
+
+                if (d <= Math.Round(dist))
+                    maxStep = d;
+                else
+                    maxStep = Math.Round(dist);
+
+                if (dist >= targetArea)
+                {
+                    windX = windX / sqrt3 + (rnd.Next((int)(Math.Round(wind) * 2 + 1)) - wind) / sqrt5;
+                    windY = windY / sqrt3 + (rnd.Next((int)(Math.Round(wind) * 2 + 1)) - wind) / sqrt5;
+                }
+                else
+                {
+                    windX = windX / sqrt2;
+                    windY = windY / sqrt2;
+                }
+
+                veloX = veloX + windX;
+                veloY = veloY + windY;
+                veloX = veloX + gravity * (xe - xs) / dist;
+                veloY = veloY + gravity * (ye - ys) / dist;
+
+                if (Hypot(veloX, veloY) > maxStep)
+                {
+                    var randomDist = maxStep / 2.0 + rnd.Next((int)(Math.Round(maxStep) / 2));
+                    var veloMag = Math.Sqrt(veloX * veloX + veloY * veloY);
+                    veloX = (veloX / veloMag) * randomDist;
+                    veloY = (veloY / veloMag) * randomDist;
+                }
+
+                var lastX = (int)Math.Round(xs);
+                var lastY = (int)Math.Round(ys);
+                xs = xs + veloX;
+                ys = ys + veloY;
+
+                
+
+                if (lastX != Math.Round(xs) || (lastY != Math.Round(ys)))
+                   Spadaj((int)Math.Round(xs), (int)Math.Round(ys));
+
+                var w = (rnd.Next((int)(Math.Round((double)(100 / msp)))) * 6);
+
+                if (w < 5)
+                    w = 5;
+
+                w = (int)Math.Round(w * 0.9);
+                await Task.Delay(w);
+            } while (!(Hypot(xs - xe, ys - ye) < 1));
+
+            if (Math.Round(xe) != Math.Round(xs) || (Math.Round(ye) != Math.Round(ys)))
+                Spadaj((int)Math.Round(xe), (int)Math.Round(ye));
+
+            _mouseSpeed = msp;
+
+            timer2.Enabled = true;
         }
     }
 
