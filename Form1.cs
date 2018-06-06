@@ -855,7 +855,7 @@ namespace klikaczu_sharp
                         //jadymy
                         await HumanWindMouse(xdest, ydest);
                         break;
-                    case 68://sprawdzamy czy sięczekło
+                    case 70://sprawdzamy czy sięczekło
                         label1.Text = "sprawdzam czy się czekło ";
                         colorczek = GetPixel(dc, int.Parse(ptakx.Text), int.Parse(ptaky.Text));
                         if (colorczek.ToString() == ptakk.Text)
@@ -863,26 +863,25 @@ namespace klikaczu_sharp
                             label1.Text = "czekło się ";
                         } 
                         else
+                        {                            
+                            licznik = licznik - 5; // zmniejsza licznik żeby timer robił pętlę bo pętla do-while i sleepy freezują progsa
+                            label1.Text = "nie czekło ";
+                        }
+                        break;
+                    case 80: // sprawdzam czy niebieska kapcza
+                        colorczek = GetPixel(dc, int.Parse(niebx.Text), int.Parse(nieby.Text));
+                        if (colorczek.ToString() == niebk.Text)
                         {
-                            colorczek = GetPixel(dc, int.Parse(niebx.Text), int.Parse(nieby.Text));
-                            if (colorczek.ToString() == niebk.Text)
-                            {
-                                // wyjebało obrazki wiec wypierdalamy softa
-                                label1.Text = "niebieska kapcza ";
-                                // pozycja
-                                xdest = rnd.Next(int.Parse(zamlgx.Text), int.Parse(zampdx.Text));
-                                ydest = rnd.Next(int.Parse(zamlgy.Text), int.Parse(zampdy.Text));
-                                //jadymy
-                                await HumanWindMouse(xdest, ydest);
-                                //klikanie
-                                LeftClick(xdest, ydest);
-                                Application.Exit();
-                            }
-                            else
-                            {
-                                licznik = licznik - 5; // zmniejsza licznik żeby timer robił pętlę bo pętla do-while i sleepy freezują progsa
-                                label1.Text = "nie czekło ";
-                            }
+                            // wyjebało obrazki wiec wypierdalamy softa
+                            label1.Text = "niebieska kapcza ";
+                            // pozycja
+                            xdest = rnd.Next(int.Parse(zamlgx.Text), int.Parse(zampdx.Text));
+                            ydest = rnd.Next(int.Parse(zamlgy.Text), int.Parse(zampdy.Text));
+                            //jadymy
+                            await HumanWindMouse(xdest, ydest);
+                            //klikanie
+                            LeftClick(xdest, ydest);
+                            Application.Exit();
                         }
                         break;
                     case 90: //klikanie przycisku getfałcet na okienku czy jestem człekiem
