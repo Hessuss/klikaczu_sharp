@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Runtime.InteropServices;
+using klikaczu_sharp.Properties;
 
 namespace klikaczu_sharp
 {
@@ -1189,8 +1190,8 @@ namespace klikaczu_sharp
 
             double gravity = 1;
             double wind = 1;
-            double minWait = 0.1;
-            double maxWait = 1;
+            //double minWait = 0.1;
+            //double maxWait = 1;
             double targetArea = 1;
             int _mouseSpeed = 50;
 
@@ -1287,6 +1288,25 @@ namespace klikaczu_sharp
             _mouseSpeed = msp;
 
             timer2.Enabled = true;
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            // Copy window location to app settings
+            Settings.Default.WindowLocation = n.Location;
+
+            // Copy window size to app settings
+            if (n.WindowState == FormWindowState.Normal)
+            {
+                Settings.Default.WindowSize = n.Size;
+            }
+            else
+            {
+                Settings.Default.WindowSize = n.RestoreBounds.Size;
+            }
+
+            // Save settings
+            Settings.Default.Save();
         }
     }
 

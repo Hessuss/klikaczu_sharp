@@ -8,5 +8,11 @@
     <Setting Name="rrr" Type="System.String" Scope="User">
       <Value Profile="(Default)">Form2</Value>
     </Setting>
+    <Setting Name="WindowLocation" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">100, 100</Value>
+    </Setting>
+    <Setting Name="WindowSize" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">172, 82</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

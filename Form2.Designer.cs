@@ -75,11 +75,16 @@
             this.Controls.Add(this.label1);
             this.DataBindings.Add(new System.Windows.Forms.Binding("ShowInTaskbar", global::klikaczu_sharp.Properties.Settings.Default, "gfn", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::klikaczu_sharp.Properties.Settings.Default, "rrr", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.DataBindings.Add(new System.Windows.Forms.Binding("Location", global::klikaczu_sharp.Properties.Settings.Default, "WindowLocation", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.Location = global::klikaczu_sharp.Properties.Settings.Default.WindowLocation;
             this.Name = "Form2";
             this.ShowIcon = false;
             this.ShowInTaskbar = global::klikaczu_sharp.Properties.Settings.Default.gfn;
             this.Text = global::klikaczu_sharp.Properties.Settings.Default.rrr;
             this.TopMost = true;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form2_FormClosing);
+            this.Load += new System.EventHandler(this.Form2_Load);
+            this.Move += new System.EventHandler(this.Form2_Move);
             this.ResumeLayout(false);
             this.PerformLayout();
 
