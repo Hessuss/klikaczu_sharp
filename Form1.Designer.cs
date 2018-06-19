@@ -155,6 +155,11 @@
             this.niebk = new System.Windows.Forms.TextBox();
             this.nieby = new System.Windows.Forms.TextBox();
             this.niebx = new System.Windows.Forms.TextBox();
+            this.button1 = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.szux = new System.Windows.Forms.TextBox();
+            this.szuy = new System.Windows.Forms.TextBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // timer1
@@ -1135,7 +1140,7 @@
             // filesetbtn
             // 
             this.filesetbtn.Font = new System.Drawing.Font("Wingdings", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.filesetbtn.Location = new System.Drawing.Point(161, 648);
+            this.filesetbtn.Location = new System.Drawing.Point(161, 651);
             this.filesetbtn.Name = "filesetbtn";
             this.filesetbtn.Size = new System.Drawing.Size(46, 23);
             this.filesetbtn.TabIndex = 160;
@@ -1164,11 +1169,50 @@
             this.niebx.Size = new System.Drawing.Size(30, 20);
             this.niebx.TabIndex = 161;
             // 
+            // button1
+            // 
+            this.button1.Font = new System.Drawing.Font("Wingdings", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.button1.Location = new System.Drawing.Point(15, 689);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(46, 23);
+            this.button1.TabIndex = 165;
+            this.button1.Text = "shoot";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.pictureBox1.Location = new System.Drawing.Point(234, 33);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(444, 489);
+            this.pictureBox1.TabIndex = 166;
+            this.pictureBox1.TabStop = false;
+            // 
+            // szux
+            // 
+            this.szux.Location = new System.Drawing.Point(85, 689);
+            this.szux.Name = "szux";
+            this.szux.Size = new System.Drawing.Size(30, 20);
+            this.szux.TabIndex = 167;
+            // 
+            // szuy
+            // 
+            this.szuy.Location = new System.Drawing.Point(125, 690);
+            this.szuy.Name = "szuy";
+            this.szuy.Size = new System.Drawing.Size(30, 20);
+            this.szuy.TabIndex = 168;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(217, 677);
+            this.ClientSize = new System.Drawing.Size(746, 762);
+            this.Controls.Add(this.szuy);
+            this.Controls.Add(this.szux);
+            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.niebk);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.nieby);
@@ -1293,10 +1337,11 @@
             this.Controls.Add(this.lblMousePosition);
             this.KeyPreview = true;
             this.Name = "Form1";
-            this.Text = "klikaczu";
+            this.Text = "klikaczu v1.2";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyUp);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1430,6 +1475,10 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox nieby;
         private System.Windows.Forms.TextBox niebx;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.TextBox szux;
+        private System.Windows.Forms.TextBox szuy;
     }
 }
 

@@ -1,9 +1,11 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -52,6 +54,12 @@ namespace klikaczu_sharp
             }
         }
 
+        //plik logu
+        FileStream fs = new FileStream("klikaczulog.txt",
+        FileMode.Append, FileAccess.Write);
+ 
+
+
         int rundka = 1; // do pętlenia rundek
         int kurx = 0;
         int xdest = 0;
@@ -95,7 +103,7 @@ namespace klikaczu_sharp
         private void timer1_Tick(object sender, EventArgs e)
         {
             position = System.Windows.Forms.Control.MousePosition;
-            color = GetPixel(dc, position.X, position.Y);
+            color = GetPixel(dc, position.X-1, position.Y-1);
             label3.Text = "X: " + position.X + "  Y: " + position.Y + " K:" + color.ToString();   
         }
 
@@ -742,10 +750,23 @@ namespace klikaczu_sharp
 
         private async void praca()
         {
-                switch (licznik)
+            switch (licznik)
                 {
-                    // łejtuje 5 tików zanim odpale maszyne
-                    case 5:
+                case 1:
+                    try
+                    {
+                        StreamWriter sw = new StreamWriter(fs);
+
+                        sw.WriteLine(DateTime.Now.ToString() + " RND_" + rundka.ToString());
+                        sw.Close();
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.ToString());
+                    }
+                    break;
+                // łejtuje 5 tików zanim odpale maszyne
+                case 5:
                         //losowy łejt
                         System.Threading.Thread.Sleep(rnd.Next(1, 500));
                         label1.Text = "odpalam przeglądarkie";
@@ -753,7 +774,7 @@ namespace klikaczu_sharp
                         {
                             prc.StartInfo.FileName = @przegladarka.Text;
                             prc.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Maximized;
-                            prc.Start();
+                            prc.Start();                       
                         }
                         catch (Exception e)
                         {
@@ -787,6 +808,7 @@ namespace klikaczu_sharp
                     case 30://sprawdzamy czy się refreszło
                         label1.Text = "sprawdzam czy się refreszło ";
                         colorczek = GetPixel(dc, int.Parse(orix.Text), int.Parse(oriy.Text));
+                        n.label4.Text = colorczek.ToString();
                         if (colorczek.ToString() != orik.Text)
                         {
                             licznik = licznik-5; // zmniejsza licznik żeby timer robił pętlę bo pętla do-while i sleepy freezują progsa
@@ -824,6 +846,7 @@ namespace klikaczu_sharp
                     case 48://sprawdzamy czy sięczekło
                         label1.Text = "sprawdzam czy jest okienko z boksikiem ";
                         colorczek = GetPixel(dc, int.Parse(ptakx.Text), int.Parse(ptaky.Text));
+                        n.label4.Text = colorczek.ToString();
                         if (colorczek.ToString() != boksk.Text)
                         {
                             licznik = licznik - 5; // zmniejsza licznik żeby timer robił pętlę bo pętla do-while i sleepy freezują progsa
@@ -855,9 +878,10 @@ namespace klikaczu_sharp
                         //jadymy
                         await HumanWindMouse(xdest, ydest);
                         break;
-                    case 68://sprawdzamy czy sięczekło
-                        label1.Text = "sprawdzam czy się czekło ";
+                    case int licz when (licz < 80 && licz >= 63)://sprawdzamy czy sięczekło
+                    label1.Text = "sprawdzam czy się czekło ";
                         colorczek = GetPixel(dc, int.Parse(ptakx.Text), int.Parse(ptaky.Text));
+                        n.label4.Text = colorczek.ToString();
                         if (colorczek.ToString() == ptakk.Text)
                         {
                             label1.Text = "czekło się ";
@@ -869,14 +893,14 @@ namespace klikaczu_sharp
                             if (colorczek.ToString() == niebk.Text)
                             {
                                 // wyjebało obrazki wiec wypierdalamy softa
-                                label1.Text = "niebieska kapcza ";
-                                
+                                label1.Text = "niebieska kapcza ";                                
                             }
                             else
                             {
                                 licznik = licznik - 5; // zmniejsza licznik żeby timer robił pętlę bo pętla do-while i sleepy freezują progsa
                                 label1.Text = "nie czekło ";
                             }
+                            //licznik--;
                         }
                         break;
                     case 80:
@@ -905,6 +929,7 @@ namespace klikaczu_sharp
                         // sprawdzam czy ptaszor nadal jest ptaszorem
                         label1.Text = "sprawdzam czy gecio się przemielił ";
                         colorczek = GetPixel(dc, int.Parse(ptakx.Text), int.Parse(ptaky.Text));
+                        n.label4.Text = colorczek.ToString();
                         if (colorczek.ToString() == ptakk.Text)
                         {
                             licznik--; // zmniejsza licznik żeby timer robił pętlę bo pętla do-while i sleepy freezują progsa
@@ -985,6 +1010,7 @@ namespace klikaczu_sharp
                         // czekamy aż wypstryka się z kasy
                         label1.Text = "czekam az wypstryka sie z kasy";
                         colorzer = GetPixel(dc, int.Parse(kuniecx.Text), int.Parse(kuniecy.Text));
+                        n.label4.Text = colorzer.ToString();
                         //label1.Text = colorzer.ToString();
                         if (colorzer.ToString() == kunieck.Text)
                         {
@@ -1055,24 +1081,49 @@ namespace klikaczu_sharp
                         //klikanie
                         LeftClick(xdest, ydest);
                     break;
-                    case 190:// klikamy rolkę
-                        label1.Text = "klikamy rolkę";
-                        //losowy łejt
-                        System.Threading.Thread.Sleep(rnd.Next(1, 500));
-                        // pozycja
-                        xdest = rnd.Next(int.Parse(rolgx.Text), int.Parse(ropdx.Text));
-                        ydest = rnd.Next(int.Parse(rolgy.Text), int.Parse(ropdy.Text));
-                        //jadymy
-                        await HumanWindMouse(xdest, ydest);
-                        //klikanie
-                        LeftClick(xdest, ydest);
+                case 190:// klikamy rolkę
+                    label1.Text = "klikamy rolkę";
+                    //losowy łejt
+                    System.Threading.Thread.Sleep(rnd.Next(1, 500));
+                    // pozycja
+                    xdest = rnd.Next(int.Parse(rolgx.Text), int.Parse(ropdx.Text));
+                    ydest = rnd.Next(int.Parse(rolgy.Text), int.Parse(ropdy.Text));
+                    //jadymy
+                    await HumanWindMouse(xdest, ydest);
+                    //klikanie
+                    LeftClick(xdest, ydest);
                     break;
-                    case 200:// abarot
+                case 195:// klikamy rolkę
+                    label1.Text = "klikamy żeśmy siury";
+                    //losowy łejt
+                    System.Threading.Thread.Sleep(rnd.Next(1, 500));
+                    // pozycja
+                    //xdest = rnd.Next(int.Parse(rolgx.Text), int.Parse(ropdx.Text));
+                    //ydest = rnd.Next(int.Parse(rolgy.Text), int.Parse(ropdy.Text));
+                    //jadymy
+                    //await HumanWindMouse(xdest, ydest);
+                    //klikanie
+                    LeftClick(xdest, ydest);
+                    break;
+                case 200:// abarot
+
                         label1.Text = "jedziem od nowa";
                         licznik = 6;
                         rundka++;
                         n.label3.Text = "rnd "+rundka.ToString();
-                        if (rundka > int.Parse(rundki.Text))
+                    try
+                    {
+                        StreamWriter sw = new StreamWriter(fs);
+
+                        sw.WriteLine(DateTime.Now.ToString() + " RND_" + rundka.ToString());
+                        sw.Close();
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.ToString());
+                    }
+
+                    if (rundka > int.Parse(rundki.Text))
                         {
                             // pozycja
                             xdest = rnd.Next(int.Parse(zamlgx.Text), int.Parse(zampdx.Text));
@@ -1311,6 +1362,22 @@ namespace klikaczu_sharp
 
             // Save settings
             Settings.Default.Save();
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            
+            Rectangle bounds = Screen.GetBounds(Point.Empty);
+            using (Bitmap bitmap = new Bitmap(bounds.Width, bounds.Height))
+            {
+                using (Graphics g = Graphics.FromImage(bitmap))
+                {
+                    g.CopyFromScreen(Point.Empty, Point.Empty, bounds.Size);
+                }
+                bitmap.Save("c:\\test.bmp", ImageFormat.Bmp);
+                Color pixelColor = bitmap.GetPixel(int.Parse(szux.Text), int.Parse(szuy.Text));
+                this.pictureBox1.BackColor = pixelColor;
+            }
         }
     }
 
