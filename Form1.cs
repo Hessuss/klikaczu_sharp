@@ -44,8 +44,7 @@ namespace klikaczu_sharp
         // zmienne globalne
         private int _Licznik;
         public int licznik
-        {
-            
+        {            
             get { return this._Licznik; }
 
             set
@@ -53,12 +52,6 @@ namespace klikaczu_sharp
                 this._Licznik = value;
             }
         }
-
-        //plik logu
-        FileStream fs = new FileStream("klikaczulog.txt",
-        FileMode.Append, FileAccess.Write);
- 
-
 
         int rundka = 1; // do pętlenia rundek
         int kurx = 0;
@@ -748,29 +741,30 @@ namespace klikaczu_sharp
             siorb_dane();
         }
 
+        private void loguj()
+        {
+            using (System.IO.StreamWriter file =
+            new System.IO.StreamWriter(@"klikaczu.log", true))
+            {
+                file.WriteLine(DateTime.Now.ToString() + " RND_" + rundka.ToString() + " " + label1.Text);
+            }
+        }
+
         private async void praca()
         {
             switch (licznik)
                 {
                 case 1:
-                    try
-                    {
-                        StreamWriter sw = new StreamWriter(fs);
-
-                        sw.WriteLine(DateTime.Now.ToString() + " RND_" + rundka.ToString());
-                        sw.Close();
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e.ToString());
-                    }
+                        label1.Text = (DateTime.Now.ToString() + " RND_" + rundka.ToString());
+                        loguj();
                     break;
                 // łejtuje 5 tików zanim odpale maszyne
                 case 5:
                         //losowy łejt
                         System.Threading.Thread.Sleep(rnd.Next(1, 500));
                         label1.Text = "odpalam przeglądarkie";
-                        try
+                    loguj();
+                    try
                         {
                             prc.StartInfo.FileName = @przegladarka.Text;
                             prc.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Maximized;
@@ -784,8 +778,9 @@ namespace klikaczu_sharp
                     
                     case 10: // refresz przegladary
                         label1.Text = "jadymy na refresz";
-                        //losowy łejt
-                        System.Threading.Thread.Sleep(rnd.Next(1, 500));
+                    loguj();
+                    //losowy łejt
+                    System.Threading.Thread.Sleep(rnd.Next(1, 500));
                         // pozycja
                         xdest = rnd.Next(int.Parse(refbtnlgx.Text), int.Parse(refbtnpdx.Text));
                         ydest = rnd.Next(int.Parse(refbtnlgy.Text), int.Parse(refbtnpdy.Text));
@@ -798,8 +793,9 @@ namespace klikaczu_sharp
                         break;
                     case 20:// suwamy myszę z miejsca sprawdzania kolorku
                         label1.Text = "suwam mysze ";
-                        //losowy łejt
-                        System.Threading.Thread.Sleep(rnd.Next(1, 500));
+                    loguj();
+                    //losowy łejt
+                    System.Threading.Thread.Sleep(rnd.Next(1, 500));
                         xdest = rnd.Next(int.Parse(eklgx.Text), int.Parse(ekpdx.Text));
                         ydest = rnd.Next(0, 100);
                         //jadymy
@@ -807,17 +803,20 @@ namespace klikaczu_sharp
                         break;
                     case 30://sprawdzamy czy się refreszło
                         label1.Text = "sprawdzam czy się refreszło ";
-                        colorczek = GetPixel(dc, int.Parse(orix.Text), int.Parse(oriy.Text));
+                    loguj();
+                    colorczek = GetPixel(dc, int.Parse(orix.Text), int.Parse(oriy.Text));
                         n.label4.Text = colorczek.ToString();
                         if (colorczek.ToString() != orik.Text)
                         {
                             licznik = licznik-5; // zmniejsza licznik żeby timer robił pętlę bo pętla do-while i sleepy freezują progsa
                             label1.Text = "nie refreszło ";
-                        }
+                        loguj();
+                    }
                         else
                         {
                             label1.Text = "refreszło się ";
-                        }
+                        loguj();
+                    }
                         break;
                     case 40: //zamykamy czacik
                         //losowy łejt
@@ -830,7 +829,8 @@ namespace klikaczu_sharp
                         //klikanie
                         LeftClick(xdest, ydest);
                         label1.Text = "klikłem klołsczat";
-                        break;
+                    loguj();
+                    break;
                     case 42: // klikanie ikony get fałcet
                         //losowy łejt
                         System.Threading.Thread.Sleep(rnd.Next(1, 500));
@@ -842,20 +842,24 @@ namespace klikaczu_sharp
                         //klikanie
                         LeftClick(xdest, ydest);
                         label1.Text = "klikłem get facio";
-                        break;
+                    loguj();
+                    break;
                     case 48://sprawdzamy czy sięczekło
                         label1.Text = "sprawdzam czy jest okienko z boksikiem ";
-                        colorczek = GetPixel(dc, int.Parse(ptakx.Text), int.Parse(ptaky.Text));
+                    loguj();
+                    colorczek = GetPixel(dc, int.Parse(ptakx.Text), int.Parse(ptaky.Text));
                         n.label4.Text = colorczek.ToString();
                         if (colorczek.ToString() != boksk.Text)
                         {
                             licznik = licznik - 5; // zmniejsza licznik żeby timer robił pętlę bo pętla do-while i sleepy freezują progsa
                             label1.Text = "nie ma boksika ";
-                        }
+                        loguj();
+                    }
                         else
                         {
                             label1.Text = "jest boksik ";
-                        }
+                        loguj();
+                    }
                         break;
                     case 60: //klikanie boksika że jestem człekiem
                         //losowy łejt
@@ -868,11 +872,13 @@ namespace klikaczu_sharp
                         //klikanie
                         LeftClick(xdest, ydest);
                         label1.Text = "klikłem boksika";
-                        break;
+                    loguj();
+                    break;
                     case 62:// suwamy myszę z miejsca sprawdzania kolorku
                         label1.Text = "suwam mysze ";
-                        //losowy łejt
-                        System.Threading.Thread.Sleep(rnd.Next(1, 500));
+                    loguj();
+                    //losowy łejt
+                    System.Threading.Thread.Sleep(rnd.Next(1, 500));
                         xdest = rnd.Next(int.Parse(poblgx.Text), int.Parse(pobpdx.Text));
                         ydest = rnd.Next(int.Parse(poblgy.Text), int.Parse(pobpdy.Text));
                         //jadymy
@@ -880,12 +886,14 @@ namespace klikaczu_sharp
                         break;
                     case int licz when (licz < 80 && licz >= 63)://sprawdzamy czy sięczekło
                     label1.Text = "sprawdzam czy się czekło ";
-                        colorczek = GetPixel(dc, int.Parse(ptakx.Text), int.Parse(ptaky.Text));
+                    loguj();
+                    colorczek = GetPixel(dc, int.Parse(ptakx.Text), int.Parse(ptaky.Text));
                         n.label4.Text = colorczek.ToString();
                         if (colorczek.ToString() == ptakk.Text)
                         {
                             label1.Text = "czekło się ";
-                            licznik = 81;
+                        loguj();
+                        licznik = 81;
                         } 
                         else
                         {
@@ -893,13 +901,15 @@ namespace klikaczu_sharp
                             if (colorczek.ToString() == niebk.Text)
                             {
                                 // wyjebało obrazki wiec wypierdalamy softa
-                                label1.Text = "niebieska kapcza ";                                
-                            }
+                                label1.Text = "niebieska kapcza ";
+                            loguj();
+                        }
                             else
                             {
                                 licznik = licznik - 5; // zmniejsza licznik żeby timer robił pętlę bo pętla do-while i sleepy freezują progsa
                                 label1.Text = "nie czekło ";
-                            }
+                            loguj();
+                        }
                             //licznik--;
                         }
                         break;
@@ -915,8 +925,9 @@ namespace klikaczu_sharp
                         break;
                     case 90: //klikanie przycisku getfałcet na okienku czy jestem człekiem
                         label1.Text = "klikam gecia ";
-                        //losowy łejt
-                        System.Threading.Thread.Sleep(rnd.Next(1, 500));
+                    loguj();
+                    //losowy łejt
+                    System.Threading.Thread.Sleep(rnd.Next(1, 500));
                         // pozycja ustawiliśmy się jużwcześniej
                         //xdest = rnd.Next(int.Parse(poblgx.Text), int.Parse(pobpdx.Text));
                         //ydest = rnd.Next(int.Parse(poblgy.Text), int.Parse(pobpdy.Text));
@@ -928,23 +939,27 @@ namespace klikaczu_sharp
                     case 100: //sprawdzanie czy okienko sprawdzające czy jestem człekiem zniknęło
                         // sprawdzam czy ptaszor nadal jest ptaszorem
                         label1.Text = "sprawdzam czy gecio się przemielił ";
-                        colorczek = GetPixel(dc, int.Parse(ptakx.Text), int.Parse(ptaky.Text));
+                    loguj();
+                    colorczek = GetPixel(dc, int.Parse(ptakx.Text), int.Parse(ptaky.Text));
                         n.label4.Text = colorczek.ToString();
                         if (colorczek.ToString() == ptakk.Text)
                         {
                             licznik--; // zmniejsza licznik żeby timer robił pętlę bo pętla do-while i sleepy freezują progsa
                             label1.Text = "jeszcze mieli ";
-                        }
+                        loguj();
+                    }
                         else
                         {
                             label1.Text = "przemielił ";
-                        }
+                        loguj();
+                    }
                         break;
                     case 110:
                         // klikamy ałtobecing
                         label1.Text = "klikam ałtobecia ";
-                        //losowy łejt
-                        System.Threading.Thread.Sleep(rnd.Next(1, 500));
+                    loguj();
+                    //losowy łejt
+                    System.Threading.Thread.Sleep(rnd.Next(1, 500));
                         // pozycja
                         xdest = rnd.Next(int.Parse(autolgx.Text), int.Parse(autopdx.Text));
                         ydest = rnd.Next(int.Parse(autolgy.Text), int.Parse(autopdy.Text));
@@ -956,8 +971,9 @@ namespace klikaczu_sharp
                     case 120:
                         // klikamy kwotke
                         label1.Text = "klikam kwotke ";
-                        //losowy łejt
-                        System.Threading.Thread.Sleep(rnd.Next(1, 500));
+                    loguj();
+                    //losowy łejt
+                    System.Threading.Thread.Sleep(rnd.Next(1, 500));
                         // pozycja
                         xdest = rnd.Next(int.Parse(kwolgx.Text), int.Parse(kwopdx.Text));
                         ydest = rnd.Next(int.Parse(kwolgy.Text), int.Parse(kwopdy.Text));
@@ -976,8 +992,9 @@ namespace klikaczu_sharp
                     case 130:
                         // klikamy kwotke
                         label1.Text = "klikam mnowznik ";
-                        //losowy łejt
-                        System.Threading.Thread.Sleep(rnd.Next(1, 500));
+                    loguj();
+                    //losowy łejt
+                    System.Threading.Thread.Sleep(rnd.Next(1, 500));
                         // pozycja
                         xdest = rnd.Next(int.Parse(pejlgx.Text), int.Parse(pejpdx.Text));
                         ydest = rnd.Next(int.Parse(pejlgy.Text), int.Parse(pejpdy.Text));
@@ -993,8 +1010,9 @@ namespace klikaczu_sharp
                     case 140:
                         // odpalamy losowanie
                         label1.Text = "odpalamy losowanie ";
-                        //losowy łejt
-                        System.Threading.Thread.Sleep(rnd.Next(1, 500));
+                    loguj();
+                    //losowy łejt
+                    System.Threading.Thread.Sleep(rnd.Next(1, 500));
                         // pozycja
                         xdest = rnd.Next(int.Parse(odpallgx.Text), int.Parse(odpalpdx.Text));
                         ydest = rnd.Next(int.Parse(odpallgy.Text), int.Parse(odpalpdy.Text));
@@ -1006,6 +1024,10 @@ namespace klikaczu_sharp
                         System.Threading.Thread.Sleep(rnd.Next(1, 500));
                         //await HumanWindMouse(rnd.Next(50, 100), rnd.Next(50, 100));
                         break;
+                case 144:
+                    label1.Text = "czekam az wypstryka sie z kasy";
+                    loguj();
+                    break;
                     case 150:
                         // czekamy aż wypstryka się z kasy
                         label1.Text = "czekam az wypstryka sie z kasy";
@@ -1045,8 +1067,9 @@ namespace klikaczu_sharp
                         break;
                     case 160:// klikamy maksiora
                         label1.Text = "klikamy maksiora";
-                        //losowy łejt
-                        System.Threading.Thread.Sleep(rnd.Next(1, 500));
+                    loguj();
+                    //losowy łejt
+                    System.Threading.Thread.Sleep(rnd.Next(1, 500));
                         // pozycja
                         xdest = rnd.Next(int.Parse(makslgx.Text), int.Parse(makspdx.Text));
                         ydest = rnd.Next(int.Parse(makslgy.Text), int.Parse(makspdy.Text));
@@ -1057,8 +1080,9 @@ namespace klikaczu_sharp
                         break;
                     case 170:// klikamy czensa
                         label1.Text = "klikamy czensa";
-                        //losowy łejt
-                        System.Threading.Thread.Sleep(rnd.Next(1, 500));
+                    loguj();
+                    //losowy łejt
+                    System.Threading.Thread.Sleep(rnd.Next(1, 500));
                         // pozycja
                         xdest = rnd.Next(int.Parse(czenslgx.Text), int.Parse(czenspdx.Text));
                         ydest = rnd.Next(int.Parse(czenslgy.Text), int.Parse(czenspdy.Text));
@@ -1071,8 +1095,9 @@ namespace klikaczu_sharp
                         break;
                     case 180:// klikamy manbata
                         label1.Text = "klikamy manbata";
-                        //losowy łejt
-                        System.Threading.Thread.Sleep(rnd.Next(1, 500));
+                    loguj();
+                    //losowy łejt
+                    System.Threading.Thread.Sleep(rnd.Next(1, 500));
                         // pozycja
                         xdest = rnd.Next(int.Parse(manlgx.Text), int.Parse(manpdx.Text));
                         ydest = rnd.Next(int.Parse(manlgy.Text), int.Parse(manpdy.Text));
@@ -1083,6 +1108,7 @@ namespace klikaczu_sharp
                     break;
                 case 190:// klikamy rolkę
                     label1.Text = "klikamy rolkę";
+                    loguj();
                     //losowy łejt
                     System.Threading.Thread.Sleep(rnd.Next(1, 500));
                     // pozycja
@@ -1095,6 +1121,7 @@ namespace klikaczu_sharp
                     break;
                 case 195:// klikamy rolkę
                     label1.Text = "klikamy żeśmy siury";
+                    loguj();
                     //losowy łejt
                     System.Threading.Thread.Sleep(rnd.Next(1, 500));
                     // pozycja
@@ -1108,20 +1135,13 @@ namespace klikaczu_sharp
                 case 200:// abarot
 
                         label1.Text = "jedziem od nowa";
-                        licznik = 6;
+                    loguj();
+                    label1.Text = DateTime.Now.ToString() + " RND_" + rundka.ToString();
+                    loguj();
+                    licznik = 6;
                         rundka++;
                         n.label3.Text = "rnd "+rundka.ToString();
-                    try
-                    {
-                        StreamWriter sw = new StreamWriter(fs);
-
-                        sw.WriteLine(DateTime.Now.ToString() + " RND_" + rundka.ToString());
-                        sw.Close();
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e.ToString());
-                    }
+                    
 
                     if (rundka > int.Parse(rundki.Text))
                         {
