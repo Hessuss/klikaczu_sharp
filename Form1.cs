@@ -41,6 +41,7 @@ namespace klikaczu_sharp
             RIGHTDOWN = 0x00000008,
             RIGHTUP = 0x00000010
         }
+        
 
         // zmienne globalne
         private int _Licznik;
@@ -759,7 +760,7 @@ namespace klikaczu_sharp
         private async void praca()
         {
             switch (licznik)
-                {
+            {
                 case 1:
                         label1.Text = (DateTime.Now.ToString() + " RND_" + rundka.ToString());
                         loguj();
@@ -780,26 +781,26 @@ namespace klikaczu_sharp
                         }
                     break;
                     
-                    case 10: // refresz przegladary
-                        label1.Text = "jadymy na refresz";
+                case 10: // refresz przegladary
+                    label1.Text = "jadymy na refresz";
                     loguj();
                     //losowy łejt
                     System.Threading.Thread.Sleep(rnd.Next(1, 500));
-                        // pozycja
-                        xdest = rnd.Next(int.Parse(refbtnlgx.Text), int.Parse(refbtnpdx.Text));
-                        ydest = rnd.Next(int.Parse(refbtnlgy.Text), int.Parse(refbtnpdy.Text));
-                        //jadymy
-                        await HumanWindMouse(xdest, ydest);
-                        //klikanie
-                        if (rundka > 1) { 
-                            LeftClick(xdest, ydest);
-                        }
-                        break;
-                    case 20:// suwamy myszę z miejsca sprawdzania kolorku
+                    // pozycja
+                    xdest = rnd.Next(int.Parse(refbtnlgx.Text), int.Parse(refbtnpdx.Text));
+                    ydest = rnd.Next(int.Parse(refbtnlgy.Text), int.Parse(refbtnpdy.Text));
+                    //jadymy
+                    await HumanWindMouse(xdest, ydest);
+                    //klikanie
+                    if (rundka > 1) { 
+                        LeftClick(xdest, ydest);
+                    }
+                    break;
+                case 20:// suwamy myszę z miejsca sprawdzania kolorku
                         label1.Text = "suwam mysze ";
-                    loguj();
-                    //losowy łejt
-                    System.Threading.Thread.Sleep(rnd.Next(1, 500));
+                        loguj();
+                        //losowy łejt
+                        System.Threading.Thread.Sleep(rnd.Next(1, 500));
                         xdest = rnd.Next(int.Parse(eklgx.Text), int.Parse(ekpdx.Text));
                         ydest = rnd.Next(0, 100);
                         //jadymy
@@ -1419,6 +1420,8 @@ namespace klikaczu_sharp
             siorb_dane();
 
             timer2.Enabled = samozapylacz.Checked;
+
+            File.Delete(@"klikaczu.log");
         }
     }
 
