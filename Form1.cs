@@ -773,7 +773,10 @@ namespace klikaczu_sharp
                     loguj();
                     try
                         {
-                            System.Diagnostics.Process.Start(@przegladarka.Text, "https://www.bitsler.com/play/dice/btc");
+                            prc.StartInfo.FileName = @przegladarka.Text;
+                            prc.StartInfo.Arguments = "https://www.bitsler.com/play/dice/btc";
+                            prc.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Maximized;
+                            prc.Start();
                         }
                         catch (Exception e)
                         {
@@ -1412,7 +1415,17 @@ namespace klikaczu_sharp
 
         private void button3_Click_1(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start(@przegladarka.Text, "https://www.bitsler.com/play/dice/btc");
+            try
+            {
+                prc.StartInfo.FileName = @przegladarka.Text;
+                prc.StartInfo.Arguments = "https://www.bitsler.com/play/dice/btc";
+                prc.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Maximized;
+                prc.Start();
+            }
+            catch (Exception e2)
+            {
+                MessageBox.Show(e2.Message);
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
