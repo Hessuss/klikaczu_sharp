@@ -13,7 +13,6 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using System.Runtime.InteropServices;
 using klikaczu_sharp.Properties;
-using NDde.Client;
 
 namespace klikaczu_sharp
 {
@@ -884,24 +883,24 @@ namespace klikaczu_sharp
                     break;
                     case 62:// suwamy myszę z miejsca sprawdzania kolorku
                         label1.Text = "suwam mysze ";
-                    loguj();
-                    //losowy łejt
-                    System.Threading.Thread.Sleep(rnd.Next(1, 500));
+                        loguj();
+                        //losowy łejt
+                        System.Threading.Thread.Sleep(rnd.Next(1, 500));
                         xdest = rnd.Next(int.Parse(poblgx.Text), int.Parse(pobpdx.Text));
                         ydest = rnd.Next(int.Parse(poblgy.Text), int.Parse(pobpdy.Text));
                         //jadymy
                         await HumanWindMouse(xdest, ydest);
                         break;
                     case int licz when (licz < 80 && licz >= 63)://sprawdzamy czy sięczekło
-                    label1.Text = "sprawdzam czy się czekło ";
-                    loguj();
-                    colorczek = GetPixel(dc, int.Parse(ptakx.Text), int.Parse(ptaky.Text));
+                        label1.Text = "sprawdzam czy się czekło ";
+                        loguj();
+                        colorczek = GetPixel(dc, int.Parse(ptakx.Text), int.Parse(ptaky.Text));
                         n.label4.Text = colorczek.ToString();
                         if (colorczek.ToString() == ptakk.Text)
                         {
                             label1.Text = "czekło się ";
-                        loguj();
-                        licznik = 81;
+                            loguj();
+                            licznik = 81;
                         } 
                         else
                         {
@@ -910,15 +909,14 @@ namespace klikaczu_sharp
                             {
                                 // wyjebało obrazki wiec wypierdalamy softa
                                 label1.Text = "niebieska kapcza ";
-                            loguj();
-                        }
+                                loguj();
+                            }
                             else
                             {
-                                licznik = licznik - 5; // zmniejsza licznik żeby timer robił pętlę bo pętla do-while i sleepy freezują progsa
+                                licznik = 62; // zmniejsza licznik żeby timer robił pętlę bo pętla do-while i sleepy freezują progsa
                                 label1.Text = "nie czekło ";
-                            loguj();
-                        }
-                            //licznik--;
+                                loguj();
+                            }
                         }
                         break;
                     case 80:

@@ -1397,7 +1397,7 @@
             this.Controls.Add(this.lblMousePosition);
             this.KeyPreview = true;
             this.Name = "Form1";
-            this.Text = "klikaczu v1.33";
+            this.Text = "klikaczu v1.34";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
