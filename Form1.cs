@@ -13,6 +13,7 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using System.Runtime.InteropServices;
 using klikaczu_sharp.Properties;
+using NDde.Client;
 
 namespace klikaczu_sharp
 {
@@ -85,8 +86,6 @@ namespace klikaczu_sharp
         public Form1()
         {
             InitializeComponent();
-
-            siorb_dane();
 
             licznik = 0;
             n.TopLevel = true;
@@ -246,6 +245,8 @@ namespace klikaczu_sharp
             ini.Write("klikaczu", "ekpdy", ekpdy.Text);
 
             ini.Write("klikaczu", "przegladarka", przegladarka.Text);
+
+            ini.Write("klikaczu", "samozapylacz", samozapylacz.Checked.ToString());
         }
 
         private void siorb_dane()
@@ -352,6 +353,11 @@ namespace klikaczu_sharp
             ekpdy.Text = ini.Read("klikaczu", "ekpdy");
 
             przegladarka.Text = ini.Read("klikaczu", "przegladarka");
+
+            if (ini.Read("klikaczu", "samozapylacz") == "true")
+            {
+                samozapylacz.Checked = true;
+            }
         }
 
 
@@ -766,9 +772,7 @@ namespace klikaczu_sharp
                     loguj();
                     try
                         {
-                            prc.StartInfo.FileName = @przegladarka.Text;
-                            prc.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Maximized;
-                            prc.Start();                       
+                            System.Diagnostics.Process.Start(@przegladarka.Text, "https://www.bitsler.com/play/dice/btc");
                         }
                         catch (Exception e)
                         {
@@ -1398,6 +1402,23 @@ namespace klikaczu_sharp
                 Color pixelColor = bitmap.GetPixel(int.Parse(szux.Text), int.Parse(szuy.Text));
                 this.pictureBox1.BackColor = pixelColor;
             }
+        }
+
+        private void button2_Click_2(object sender, EventArgs e)
+        {
+            timer2.Enabled = false;
+        }
+
+        private void button3_Click_1(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start(@przegladarka.Text, "https://www.bitsler.com/play/dice/btc");
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            siorb_dane();
+
+            timer2.Enabled = samozapylacz.Checked;
         }
     }
 

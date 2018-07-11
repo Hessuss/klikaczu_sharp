@@ -156,9 +156,14 @@
             this.nieby = new System.Windows.Forms.TextBox();
             this.niebx = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.szux = new System.Windows.Forms.TextBox();
             this.szuy = new System.Windows.Forms.TextBox();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.samozapylacz = new System.Windows.Forms.CheckBox();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -222,9 +227,9 @@
             // 
             // btnLaczing
             // 
-            this.btnLaczing.Location = new System.Drawing.Point(109, 621);
+            this.btnLaczing.Location = new System.Drawing.Point(99, 622);
             this.btnLaczing.Name = "btnLaczing";
-            this.btnLaczing.Size = new System.Drawing.Size(98, 23);
+            this.btnLaczing.Size = new System.Drawing.Size(56, 23);
             this.btnLaczing.TabIndex = 44;
             this.btnLaczing.Text = "laczing";
             this.btnLaczing.UseVisualStyleBackColor = true;
@@ -345,7 +350,7 @@
             // 
             this.btnStop.Location = new System.Drawing.Point(15, 621);
             this.btnStop.Name = "btnStop";
-            this.btnStop.Size = new System.Drawing.Size(87, 23);
+            this.btnStop.Size = new System.Drawing.Size(42, 23);
             this.btnStop.TabIndex = 45;
             this.btnStop.Text = "stop";
             this.btnStop.UseVisualStyleBackColor = true;
@@ -1180,22 +1185,13 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.pictureBox1.Location = new System.Drawing.Point(234, 33);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(444, 489);
-            this.pictureBox1.TabIndex = 166;
-            this.pictureBox1.TabStop = false;
-            // 
             // szux
             // 
             this.szux.Location = new System.Drawing.Point(85, 689);
             this.szux.Name = "szux";
             this.szux.Size = new System.Drawing.Size(30, 20);
             this.szux.TabIndex = 167;
+            this.szux.Text = "0";
             // 
             // szuy
             // 
@@ -1203,15 +1199,79 @@
             this.szuy.Name = "szuy";
             this.szuy.Size = new System.Drawing.Size(30, 20);
             this.szuy.TabIndex = 168;
+            this.szuy.Text = "0";
+            // 
+            // richTextBox1
+            // 
+            this.richTextBox1.Location = new System.Drawing.Point(221, 4);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.Size = new System.Drawing.Size(500, 624);
+            this.richTextBox1.TabIndex = 169;
+            this.richTextBox1.Text = "";
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(61, 622);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(35, 23);
+            this.button2.TabIndex = 170;
+            this.button2.Text = "II";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click_2);
+            // 
+            // button3
+            // 
+            this.button3.Font = new System.Drawing.Font("Wingdings", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.button3.Location = new System.Drawing.Point(250, 663);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(46, 23);
+            this.button3.TabIndex = 171;
+            this.button3.Text = "łebuj";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click_1);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.pictureBox1.Location = new System.Drawing.Point(179, 680);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(28, 28);
+            this.pictureBox1.TabIndex = 172;
+            this.pictureBox1.TabStop = false;
+            // 
+            // samozapylacz
+            // 
+            this.samozapylacz.AutoSize = true;
+            this.samozapylacz.Location = new System.Drawing.Point(161, 626);
+            this.samozapylacz.Name = "samozapylacz";
+            this.samozapylacz.Size = new System.Drawing.Size(62, 17);
+            this.samozapylacz.TabIndex = 173;
+            this.samozapylacz.Text = "smozap";
+            this.samozapylacz.UseVisualStyleBackColor = true;
+            // 
+            // checkBox2
+            // 
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Location = new System.Drawing.Point(178, 991);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(80, 17);
+            this.checkBox2.TabIndex = 174;
+            this.checkBox2.Text = "checkBox2";
+            this.checkBox2.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(746, 762);
+            this.Controls.Add(this.checkBox2);
+            this.Controls.Add(this.samozapylacz);
+            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.button3);
+            this.Controls.Add(this.button2);
+            this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.szuy);
             this.Controls.Add(this.szux);
-            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.niebk);
             this.Controls.Add(this.label9);
@@ -1337,8 +1397,9 @@
             this.Controls.Add(this.lblMousePosition);
             this.KeyPreview = true;
             this.Name = "Form1";
-            this.Text = "klikaczu v1.2";
+            this.Text = "klikaczu v1.31";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyUp);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -1476,9 +1537,14 @@
         private System.Windows.Forms.TextBox nieby;
         private System.Windows.Forms.TextBox niebx;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.TextBox szux;
         private System.Windows.Forms.TextBox szuy;
+        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.CheckBox samozapylacz;
+        private System.Windows.Forms.CheckBox checkBox2;
     }
 }
 
